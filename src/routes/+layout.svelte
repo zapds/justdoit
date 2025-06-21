@@ -3,6 +3,7 @@
 	import * as Avatar from '$lib/components/ui/avatar';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Check, MenuIcon } from 'lucide-svelte';
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 	
 	let { children, data } = $props();
 </script>
@@ -14,14 +15,27 @@
 		</a>
 	</div>
 	<div class="ml-auto">
-		{#if data?.user}
-			<Avatar.Root class="ml-auto">
-				<Avatar.Image src={data.user.picture} alt="User Avatar" />
-				<Avatar.Fallback>{data.user.name[0]}</Avatar.Fallback>
-			</Avatar.Root>
-		{:else}
-			<MenuIcon class="ml-auto" />
-		{/if}
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger>
+				{#if data?.user}
+					<Avatar.Root class="ml-auto">
+						<Avatar.Image src={data.user.picture} alt="User Avatar" />
+						<Avatar.Fallback>{data.user.name[0]}</Avatar.Fallback>
+					</Avatar.Root>
+				{:else}
+					<MenuIcon class="ml-auto" />
+				{/if}
+
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content>
+			  <DropdownMenu.Group>
+				<DropdownMenu.Label>{data.user ? data.user.name : "Not signed in"}</DropdownMenu.Label>
+				<DropdownMenu.Separator />
+				<DropdownMenu.Item><a href={data.user ? "/logout" : "/login/google"}>{data.user ? "Logout" : "Login"}</a></DropdownMenu.Item>
+
+			  </DropdownMenu.Group>
+			</DropdownMenu.Content>
+		  </DropdownMenu.Root>
 	</div>
 </div>
 

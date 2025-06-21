@@ -4,7 +4,7 @@
     import { invalidateAll } from '$app/navigation';
     import Button from "$lib/components/ui/button/button.svelte";
     import { Skeleton } from "$lib/components/ui/skeleton/index.js";
-    import { Circle, CircleDashed, Pin } from "lucide-svelte";
+    import { Circle, CircleDashed, PartyPopper, Pin } from "lucide-svelte";
     const { data, form } = $props();
 
 
@@ -35,6 +35,13 @@
             {tasks.length}
             </span>
         </h1>
+        {#if tasks.length === 0 && !pending }
+        <div class="flex flex-col text-primary/90 h-full w-full items-center justify-center">
+            <PartyPopper size="64" />
+            <p class="text-center text-2xl font-extrabold tracking-tigher">I can't tell if you're jobless or perfect</p>
+        </div>
+        {/if}
+        
         <ul class="flex w-full flex-col gap-4 max-w-7xl">
             {#each tasks as task (task.id)}
                 {#if task.pinned === true}
@@ -125,6 +132,7 @@
     <div class="fixed bottom-32 flex flex-row w-screen justify-center">
         <input
             name="task"
+            disabled={pending}
             autofocus
             class="bg-background text-xl md:text-4xl max-w-7xl outline-0 placeholder:text-muted-foreground placeholder:font-extrabold placeholder:tracking-tighter rounded-full shadow-xl flex border px-8 py-4"
             placeholder="Add a new task..." />
