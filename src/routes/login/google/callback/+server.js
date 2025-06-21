@@ -34,15 +34,12 @@ export async function GET(event) {
     const googleUserId = claims.sub;
     const username = claims.name;
     const picture = claims.picture;
-    console.log(JSON.stringify(claims));
 
 
     const existingUser = await getUserFromGoogleId(googleUserId);
 
     if (existingUser !== null) {
-        console.log("User exists", existingUser);
         const sessionToken = await generateSessionToken();
-        console.log("Session token", sessionToken);
         const session = await createSession(sessionToken, existingUser.id);
         setSessionTokenCookie(event, sessionToken);
         return new Response(null, {
@@ -53,14 +50,11 @@ export async function GET(event) {
         });
     }
 
-
-    console.log("Creating user", googleUserId, username);
     const user = await createUser(googleUserId, username, picture);
 
     const sessionToken = await generateSessionToken();
     const session = await createSession(sessionToken, user.id);
     setSessionTokenCookie(event, sessionToken);
-    console.log("User created", user);
     return new Response(null, {
         status: 302,
         headers: {

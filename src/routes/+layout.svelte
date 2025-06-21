@@ -7,7 +7,7 @@
 	let { children, data } = $props();
 </script>
 
-<div class="h-16 mx-auto flex max-w-7xl flex-row gap-4 items-center">
+<div class="h-16 px-2 mx-auto flex max-w-7xl flex-row gap-4 items-center">
 	<div>
 		<a href="/">
 			<Check class="h-8 w-8 text-primary" />

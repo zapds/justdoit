@@ -2,7 +2,8 @@ CREATE TABLE "user" (
     id INTEGER,
     google_id TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
-    picture TEXT
+    picture TEXT,
+    UNIQUE (id)
 );
 
 
@@ -10,4 +11,13 @@ CREATE TABLE session (
     id TEXT NOT NULL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     expires_at INTEGER NOT NULL
+);
+
+CREATE TABLE tasks (
+    user_id INTEGER NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    pinned BOOLEAN DEFAULT FALSE
 );
