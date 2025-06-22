@@ -1,10 +1,12 @@
 <script>
+    import * as Select from "$lib/components/ui/select/index.js";
     import Input from "$lib/components/ui/input/input.svelte";
     import { enhance, applyAction } from '$app/forms';
     import { invalidateAll } from '$app/navigation';
     import Button from "$lib/components/ui/button/button.svelte";
     import { Skeleton } from "$lib/components/ui/skeleton/index.js";
     import { Circle, CircleDashed, PartyPopper, Pin, CircleCheckBig, Trash2 } from "lucide-svelte";
+    import { draw, fade } from "svelte/transition";
     const { data, form } = $props();
 
 
@@ -20,8 +22,16 @@
     )
     */
 
+
+    let sortOptions = [
+        { value: "default", label: "Newest first" },
+        { value: "oldest", label: "Oldest first"}
+
+    ]
     let tasks = $state(data.tasks);
     let mode = $state("default");
+    let sort = $state("default");
+
     $effect(() => {
         if (mode === "default") {
             tasks = data.tasks.filter(task => !task.completed);
@@ -29,8 +39,19 @@
             tasks = data.tasks;
         }
     });
+
+    $effect(() => {
+        if (sort === "default") {
+            tasks = tasks.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        } else if (sort === "oldest") {
+            tasks = tasks.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        }
+    });
     $inspect(tasks);
 
+    const triggerContent = $derived(
+    sortOptions.find((f) => f.value === sort)?.label ?? "Sort by"
+    );
 </script>
 
 {#if form?.error}
@@ -49,14 +70,41 @@
                 Hide Completed   
                 {/if}
             </Button>
+
+ 
+            <Select.Root type="single" name="sort" bind:value={sort}>
+                <Select.Trigger class="w-[180px]">
+                    {triggerContent}
+                </Select.Trigger>
+                <Select.Content>
+                    {#each sortOptions as option (option.value)}
+                        <Select.Item
+                        value={option.value}
+                        label={option.label}>
+                        {option.label}
+                        </Select.Item>
+                    {/each}
+                </Select.Content>
+            </Select.Root>
             <span class="ml-auto font-extralight">
                 {tasks.length}
             </span>
         </div>
         {#if tasks.length === 0 && !pending }
         <div class="flex flex-col text-primary/90 h-full w-full items-center justify-center">
-            <PartyPopper size="64" />
-            <p class="text-center text-2xl font-extrabold tracking-tigher">I can't tell if you're jobless or perfect</p>
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper-icon lucide-party-popper">
+                <path in:draw d="M5.8 11.3 2 22l10.7-3.79"/>
+                <path in:draw d="M4 3h.01"/>
+                <path in:draw d="M22 8h.01"/>
+                <path in:draw d="M15 2h.01"/>
+                <path in:draw d="M22 20h.01"/>
+                <path in:draw d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/>
+                <path in:draw d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/>
+                <path in:draw d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/>
+                <path in:draw d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/>
+              </svg>
+              
+        <p in:fade class="text-center text-2xl font-extrabold tracking-tigher">I can't tell if you're jobless or perfect</p>
         </div>
         {/if}
         
@@ -212,7 +260,6 @@
     <div class="fixed bottom-32 flex flex-row w-screen justify-center">
         <input
             name="task"
-            disabled={pending}
             autofocus
             class="bg-background text-xl md:text-4xl max-w-7xl outline-0 placeholder:text-muted-foreground placeholder:font-extrabold placeholder:tracking-tighter rounded-full shadow-xl flex border px-8 py-4"
             placeholder="Add a new task..." />
