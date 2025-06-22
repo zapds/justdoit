@@ -2,12 +2,15 @@
 	import '../app.css';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { Check, MenuIcon } from 'lucide-svelte';
+	import { Check, Database, LogInIcon, LogOutIcon, MenuIcon, MoonIcon, SunIcon } from 'lucide-svelte';
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+	import { mode, ModeWatcher, toggleMode, } from 'mode-watcher';
 	
 	let { children, data } = $props();
 </script>
 
+
+<ModeWatcher />
 <div class="h-16 px-2 mx-auto flex max-w-7xl flex-row gap-4 items-center">
 	<div>
 		<a href="/">
@@ -31,8 +34,29 @@
 			  <DropdownMenu.Group>
 				<DropdownMenu.Label>{data.user ? data.user.name : "Not signed in"}</DropdownMenu.Label>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item><a href={data.user ? "/logout" : "/login/google"}>{data.user ? "Logout" : "Login"}</a></DropdownMenu.Item>
-
+				<DropdownMenu.Item onclick={toggleMode}>
+					{#if mode.current === 'dark'}
+						<SunIcon />
+						Light Mode
+					{:else}
+						<MoonIcon />
+						Dark Mode
+					{/if}
+				</DropdownMenu.Item>
+				<DropdownMenu.Separator />
+				<DropdownMenu.Item>
+					{#if data.user}
+						<LogOutIcon />
+						<a href="/logout">
+							Logout
+						</a>
+					{:else}
+						<LogInIcon />
+						<a href="/login/google">
+							Login
+						</a>
+					{/if}
+				</DropdownMenu.Item>
 			  </DropdownMenu.Group>
 			</DropdownMenu.Content>
 		  </DropdownMenu.Root>

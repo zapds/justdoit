@@ -33,6 +33,7 @@
 		"@sveltejs/adapter-node": "^5.2.12",
 		"@vercel/analytics": "^1.5.0",
 		"arctic": "^3.7.0",
-		"lucide-svelte": "^0.518.0"
+		"lucide-svelte": "^0.518.0",
+		"mode-watcher": "^1.0.8"
 	}
 }
