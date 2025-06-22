@@ -60,16 +60,22 @@
 
 
 <div class="flex flex-row w-screen pt-16 px-2">
-    <div class="flex rounded-md border flex-col m-4 grow max-w-4xl mx-auto p-8 ">
-        <div class="flex flex-row w-full py-8 items-center gap-8">
-            <h1 class="text-4xl font-extrabold tracking-tighter">Just Do These.</h1>
-            <Button variant="outline" onclick={() => mode = mode === "default" ? "all" : "default"}>
+    <div class="flex rounded-md border flex-col m-2 grow max-w-4xl mx-auto p-8 ">
+        <div class="flex flex-row flex-wrap w-full py-8 items-center gap-4">
+            <div class="bg-gradient-to-r from-[#1a2a6c] via-[#b21f1f] to-[#fdbb2d] bg-clip-text text-transparent">
+                <h1 class="text-4xl font-extrabold tracking-tighter">Just Do These.</h1>
+            </div>
+            <Button variant="outline" class="hover:text-primary" onclick={() => mode = mode === "default" ? "all" : "default"}>
                 {#if mode == "default"}
                 Show Completed 
                 {:else}
                 Hide Completed   
                 {/if}
             </Button>
+<!-- 
+            <Button variant="outline" class="hover:text-primary" onclick={() => showMotivation = !showMotivation}>
+                I need motivation!!
+            </Button> -->
 
  
             <Select.Root type="single" name="sort" bind:value={sort}>
@@ -247,11 +253,11 @@
     action="?/create"
     use:enhance={({ formElement, formData, action }) => {
         tasks = [{id: tasks.length + 1, title: formData.get('task'), completed: false, pinned: false}, ...tasks];
+        formElement.reset();
         return async ({ result }) => {
             if (result.type === 'success') {
                 await applyAction(result);
                 await invalidateAll();
-                formElement.reset();
             }
         };
 
@@ -261,7 +267,7 @@
         <input
             name="task"
             autofocus
-            class="bg-background text-xl md:text-4xl max-w-7xl outline-0 placeholder:text-muted-foreground placeholder:font-extrabold placeholder:tracking-tighter rounded-full shadow-xl flex border px-8 py-4"
+            class="bg-background text-xl md:text-4xl max-w-7xl outline-0 placeholder:text-muted-foreground placeholder:tracking-tighter rounded-full shadow-xl flex border px-8 py-4"
             placeholder="Add a new task..." />
     </div>
 </form>
