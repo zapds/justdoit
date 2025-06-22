@@ -4,7 +4,7 @@
     import { invalidateAll } from '$app/navigation';
     import Button from "$lib/components/ui/button/button.svelte";
     import { Skeleton } from "$lib/components/ui/skeleton/index.js";
-    import { Circle, CircleDashed, PartyPopper, Pin } from "lucide-svelte";
+    import { Circle, CircleDashed, PartyPopper, Pin, CircleCheckBig, Trash2 } from "lucide-svelte";
     const { data, form } = $props();
 
 
@@ -20,7 +20,16 @@
     )
     */
 
-    let tasks = $derived(data.tasks.filter(task => !task.completed));
+    let tasks = $state(data.tasks);
+    let mode = $state("default");
+    $effect(() => {
+        if (mode === "default") {
+            tasks = data.tasks.filter(task => !task.completed);
+        } else {
+            tasks = data.tasks;
+        }
+    });
+    $inspect(tasks);
 
 </script>
 
@@ -28,13 +37,22 @@
 <p class="error">{form.error}</p>
 {/if}
 
+
 <div class="flex flex-row w-screen pt-16 px-2">
     <div class="flex rounded-md border flex-col m-4 grow max-w-4xl mx-auto p-8 ">
-        <h1 class="inline-flex w-full text-4xl font-extrabold tracking-tighter py-8">Just Do These.
+        <div class="flex flex-row w-full py-8 items-center gap-8">
+            <h1 class="text-4xl font-extrabold tracking-tighter">Just Do These.</h1>
+            <Button variant="outline" onclick={() => mode = mode === "default" ? "all" : "default"}>
+                {#if mode == "default"}
+                Show Completed 
+                {:else}
+                Hide Completed   
+                {/if}
+            </Button>
             <span class="ml-auto font-extralight">
-            {tasks.length}
+                {tasks.length}
             </span>
-        </h1>
+        </div>
         {#if tasks.length === 0 && !pending }
         <div class="flex flex-col text-primary/90 h-full w-full items-center justify-center">
             <PartyPopper size="64" />
@@ -48,6 +66,28 @@
                     <form
                     method="POST"
                     use:enhance={({ formElement, formData, action }) => {
+                        if (action.search === "?/done") {
+                            tasks = tasks.map(t => {
+                                if (t.id === task.id) {
+                                    return { ...t, completed: !t.completed };
+                                }
+                                return t;
+                            });
+                        } else if (action.search === "?/pin") {
+                            tasks = tasks.map(t => {
+                                if (t.id === task.id) {
+                                    return { ...t, pinned: true };
+                                }
+                                return t;
+                            });
+                        } else if (action.search === "?/unpin") {
+                            tasks = tasks.map(t => {
+                                if (t.id === task.id) {
+                                    return { ...t, pinned: false };
+                                }
+                                return t;
+                            });
+                        }
                         return async ({ result }) => {
                             if (result.type === 'success') {
                                 await applyAction(result);
@@ -59,8 +99,12 @@
                         >
                         <input type="hidden" name="taskId" value={task.id} />
                         <div class="w-full inline-flex flex-row items-center border border-transparent hover:border-border p-4 rounded-md transition-all duration-200">
-                            <button formaction="?/done" class="size-10" variant="icon">
+                            <button formaction={task.completed ? "?/undone" : "?/done"} class="size-10" variant="icon">
+                                {#if task.completed}
+                                <CircleCheckBig class="text-primary font-bold" size="24" />
+                                {:else}
                                 <Circle class="text-primary font-bold" size="24" />
+                                {/if}
                             </button>
                             <p class="text-2xl">{task.title}</p>
                             <button formaction="?/unpin" class="ml-auto size-10" variant="icon">
@@ -84,6 +128,29 @@
                     <form
                     method="POST"
                     use:enhance={({ formElement, formData, action }) => {
+                        console.log("Action:", action);
+                        if (action.search === "?/done") {
+                            tasks = tasks.map(t => {
+                                if (t.id === task.id) {
+                                    return { ...t, completed: !t.completed };
+                                }
+                                return t;
+                            });
+                        } else if (action.search === "?/pin") {
+                            tasks = tasks.map(t => {
+                                if (t.id === task.id) {
+                                    return { ...t, pinned: true };
+                                }
+                                return t;
+                            });
+                        } else if (action.search === "?/unpin") {
+                            tasks = tasks.map(t => {
+                                if (t.id === task.id) {
+                                    return { ...t, pinned: false };
+                                }
+                                return t;
+                            });
+                        }
                         return async ({ result }) => {
                             if (result.type === 'success') {
                                 await applyAction(result);
@@ -95,8 +162,12 @@
                         >
                         <input type="hidden" name="taskId" value={task.id} />
                         <div class="group w-full inline-flex flex-row items-center border border-transparent hover:border-border p-4 rounded-md transition-all duration-200">
-                            <button formaction="?/done" class="size-10" variant="icon">
+                            <button formaction={task.completed ? "?/undone" : "?/done"} class="size-10" variant="icon">
+                                {#if task.completed}
+                                <CircleCheckBig class="text-primary font-bold" size="24" />
+                                {:else}
                                 <Circle class="text-primary font-bold" size="24" />
+                                {/if}
                             </button>
                             <p class="text-2xl">{task.title}</p>
                             <button formaction="?/pin" class="size-10 ml-auto opacity-0 group-hover:opacity-100 transition-all duration-200" variant="icon">
@@ -117,13 +188,12 @@
     method="POST"
     action="?/create"
     use:enhance={({ formElement, formData, action }) => {
-        pending = true;
+        tasks = [{id: tasks.length + 1, title: formData.get('task'), completed: false, pinned: false}, ...tasks];
         return async ({ result }) => {
             if (result.type === 'success') {
                 await applyAction(result);
                 await invalidateAll();
                 formElement.reset();
-                pending = false;
             }
         };
 

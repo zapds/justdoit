@@ -1,12 +1,11 @@
-import { execute } from '$lib/db.js';
+import { fetch, execute } from '$lib/db.js';
 
 
 export async function load(event) {
-    const tasks = await execute(
+    const tasks = await fetch(
         "SELECT id, title, completed, created_at, pinned FROM tasks WHERE user_id = $1 ORDER BY created_at DESC",
         [event.locals.user.id]
     )
-    console.log("Tasks loaded:", tasks);
     return {
         tasks: tasks || [],
     };
@@ -132,6 +131,30 @@ export const actions = {
 
         await execute(
             "UPDATE tasks SET completed = True WHERE id = $1 AND user_id = $2",
+            [taskId, user.id]
+        );
+    },
+    undone: async (event) => {
+        const user = event.locals.user;
+        const data = await event.request.formData();
+        const taskId = data.get("taskId");
+
+        if (!user) {
+            return {
+                status: 401,
+                error: "Unauthorized"
+            };
+        }
+
+        if (!taskId || typeof taskId !== "string") {
+            return {
+                status: 400,
+                error: "Task ID is required"
+            };
+        }
+
+        await execute(
+            "UPDATE tasks SET completed = False WHERE id = $1 AND user_id = $2",
             [taskId, user.id]
         );
     }
