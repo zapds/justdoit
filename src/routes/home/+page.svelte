@@ -112,6 +112,9 @@
                             <button formaction="?/unpin" class="ml-auto size-10" variant="icon">
                                 <Pin class="hover:fill-primary transition-all duration-200" size="24"/>
                             </button>
+                            <button formaction="?/delete" class="size-10 opacity-0 group-hover:opacity-100 transition-all duration-200" variant="icon">
+                                <Trash2 class="hover:fill-destructive stroke-destructive transition-all duration-200" size="24"/>
+                            </button>
                         </div>
 
                     </form>
