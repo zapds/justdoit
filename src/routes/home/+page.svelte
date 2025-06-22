@@ -87,6 +87,8 @@
                                 }
                                 return t;
                             });
+                        } else if (action.search === "?/delete") {
+                            tasks = tasks.filter(t => t.id !== task.id);
                         }
                         return async ({ result }) => {
                             if (result.type === 'success') {
@@ -150,6 +152,8 @@
                                 }
                                 return t;
                             });
+                        } else if (action.search === "?/delete") {
+                            tasks = tasks.filter(t => t.id !== task.id);
                         }
                         return async ({ result }) => {
                             if (result.type === 'success') {
@@ -172,6 +176,9 @@
                             <p class="text-2xl">{task.title}</p>
                             <button formaction="?/pin" class="size-10 ml-auto opacity-0 group-hover:opacity-100 transition-all duration-200" variant="icon">
                                 <Pin class="hover:fill-primary transition-all duration-200" size="24"/>
+                            </button>
+                            <button formaction="?/delete" class="size-10 opacity-0 group-hover:opacity-100 transition-all duration-200" variant="icon">
+                                <Trash2 class="hover:fill-destructive stroke-destructive transition-all duration-200" size="24"/>
                             </button>
                         </div>
 
