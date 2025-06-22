@@ -26,6 +26,6 @@
         <img src={Image} alt="Google Icon" class="inline-block ml-2 w-6 h-6" />
         {/if}
     </Button>
-    <iframe src="https://www.youtube-nocookie.com/embed/ZXsQAXx_ao0?si=Mime-mdhNfaRjc3_&amp;autoplay=1" title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media; web-share;" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe title="Motivational GIF" src="https://giphy.com/embed/b7f0X8Okk1uyk" width="480" height="269" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 </div>
 
