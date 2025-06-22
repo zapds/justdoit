@@ -13,15 +13,8 @@ A todo app that motivates you to Just Do It.
 - Customizable sorting
 - Motivational video included
 
-# Screenshots
-Desktop
+# Screenshot
 ![Desktop Screenshot](/src/lib/desktop_screenshot.png)
-
-Mobile
-![Mobile Screenshot](/static/mobile_screenshot.png)
-
-![PWA installation on mobile](/src/lib/pwa_screenshot.jpeg)
-
 
 
 # Tech Stack
