@@ -13,7 +13,7 @@
     
     <Check class="h-48 w-48" />
     <div class="bg-gradient-to-r from-[#1a2a6c] via-[#b21f1f] to-[#fdbb2d] bg-clip-text text-transparent">
-        <h1 class="text-8xl font-extrabold tracking-tighter">Just Do It.</h1>
+        <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter">Just Do It.</h1>
     </div>
     <Button onclick={() => {loading = true; goto(data?.user ? "/home" : "/login/google")}} size="lg" class="inline-flex" disabled={loading}>
         {#if loading}
