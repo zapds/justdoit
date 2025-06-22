@@ -1,14 +1,35 @@
 # Just Do It. 
 A todo app that motivates you to Just Do It.
 
+
+
 # Features
+- Progressive Web App (PWA) supported, can be installed by clicking Add to Home Screen
+- Responsive mobile friendly layout
 - Easy login using Google OAuth2
 - Real time cloud PostgreSQL sync (via WebSocket)
 - Dark mode feature to protect your retina
 - Pin to top supported
 - Customizable sorting
 - Motivational video included
-- 
+
+# Screenshots
+Desktop
+![Desktop Screenshot](/src/lib/desktop_screenshot.png)
+
+Mobile
+![Mobile Screenshot](/static/mobile_screenshot.png)
+
+![PWA installation on mobile](/src/lib/pwa_screenshot.jpeg)
+
+
+
+# Tech Stack
+- Sveltekit
+- TailwindCSS
+- Vercel serverless functions (PostgreSQL)
+- Google OAuth2
+
 
 # Installation
 Deployed at https://justdoit.zapdos.me. To run locally, 
@@ -39,3 +60,7 @@ npm i
 ```bash
 npm run dev
 ``` 
+
+# Author
+Narendhar T S
+EC24B1053
